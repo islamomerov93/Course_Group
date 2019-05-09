@@ -141,8 +141,8 @@ namespace HW_4.ViewModels
             {
                 if (SearchText == null) return groups;
                 
-                return (ObservableCollection<Group>)groups.Where(x => x.Name.ToLower().Contains(SearchText.ToLower()) || x.ServiceType.Name.ToLower().Contains(SearchText.ToLower()) ||
-                x.Level.Name.ToLower().Contains(SearchText.ToLower()) || x.Branch.Address.ToLower().Contains(SearchText.ToLower()));
+                return new ObservableCollection<Group>(groups.Where(x => x.Name.ToLower().Contains(SearchText.ToLower()) || x.ServiceType.Name.ToLower().Contains(SearchText.ToLower()) ||
+                x.Level.Name.ToLower().Contains(SearchText.ToLower()) || x.Branch.Address.ToLower().Contains(SearchText.ToLower())).ToList());
             }
             set
             {

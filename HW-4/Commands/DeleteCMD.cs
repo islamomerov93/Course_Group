@@ -23,6 +23,7 @@ namespace HW_4.Commands
             GroupVM.State = value;
             GroupVM.Groups.Remove(GroupVM.Groups.FirstOrDefault(x=>x.No == GroupVM.CurrentGroup.No));
             GroupVM.MyFilteredItems = new ObservableCollection<Entities.Group>(GroupVM.Groups);
+            GroupVM.CurrentGroup = null;
         }
     }
 }
