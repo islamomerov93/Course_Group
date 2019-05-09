@@ -1,0 +1,306 @@
+﻿<UserControl x:Class="HW_4.UserControl.GroupInfoUC"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:HW_4.UserControl"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style x:Key="BaseButton" TargetType="{x:Type Button}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid x:Name="grid">
+                            <Border x:Name="border" CornerRadius="10" BorderBrush="Gray" BorderThickness="2">
+                                <Border.Background>
+                                    <RadialGradientBrush GradientOrigin="0.496,1.052">
+                                        <RadialGradientBrush.RelativeTransform>
+                                            <TransformGroup>
+                                                <ScaleTransform CenterX="0.5" CenterY="0.5" 
+                                                        ScaleX="1.5" ScaleY="1.5"/>
+                                                <TranslateTransform X="0.02" Y="0.3"/>
+                                            </TransformGroup>
+                                        </RadialGradientBrush.RelativeTransform>
+                                        <GradientStop Offset="1" Color="#00000000"/>
+                                        <GradientStop Offset="0.3" Color="#FFFFFFFF"/>
+                                    </RadialGradientBrush>
+                                </Border.Background>
+                                <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          TextElement.FontWeight="Bold">
+                                </ContentPresenter>
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" TargetName="border">
+                                    <Setter.Value>
+                                        <RadialGradientBrush GradientOrigin="0.496,1.052">
+                                            <RadialGradientBrush.RelativeTransform>
+                                                <TransformGroup>
+                                                    <ScaleTransform CenterX="0.5" CenterY="0.5" ScaleX="1.5" ScaleY="1.5"/>
+                                                    <TranslateTransform X="0.02" Y="0.3"/>
+                                                </TransformGroup>
+                                            </RadialGradientBrush.RelativeTransform>
+                                            <GradientStop Color="#00000000" Offset="1"/>
+                                            <GradientStop Color="#FF303030" Offset="0.3"/>
+                                        </RadialGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="BorderBrush" TargetName="border" Value="#FF33962B"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" TargetName="grid" Value="0.25"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="{x:Type ListViewItem}">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        </Style>
+    </UserControl.Resources>
+    <Border Background="DarkGray" BorderThickness="5">
+    <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <StackPanel>
+            <Border Background="DarkGray" BorderThickness="3">
+            <TextBlock Height="25" FontSize="18" Background="Gray" TextAlignment="Center" FontWeight="Medium">Groups</TextBlock>
+        </Border>
+        <Grid Background="LightGray">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <TextBlock Height="25" FontSize="15" HorizontalAlignment="Right" Margin="5 5">Group Name</TextBlock>
+                    <TextBlock Height="25" FontSize="15" HorizontalAlignment="Right" Margin="5 5">Service Type</TextBlock>
+                    <TextBlock Height="25" FontSize="15" HorizontalAlignment="Right" Margin="5 5 5 25">Level</TextBlock>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1">
+                        <TextBox FontSize="15" Margin="5 5" Text="{Binding CurrentGroup.Name,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}">
+                            <TextBox.Style>
+                                <Style TargetType="{x:Type TextBox}">
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding State, UpdateSourceTrigger=PropertyChanged}" Value="1">
+                                            <Setter Property="IsEnabled" Value="True"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBox.Style>
+                        </TextBox>
+                        <ComboBox FontSize="15" Margin="5 5" ItemsSource="{Binding ServiceTypes,UpdateSourceTrigger=PropertyChanged,Mode=OneWay}" 
+                                  SelectedItem="{Binding CurrentGroup.ServiceType}" DisplayMemberPath="Name">
+                            <ComboBox.Style>
+                                <Style TargetType="{x:Type ComboBox}">
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding State, UpdateSourceTrigger=PropertyChanged}" Value="1">
+                                            <Setter Property="IsEnabled" Value="True"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ComboBox.Style>
+                        </ComboBox>
+                        <ComboBox FontSize="15" Margin="5 5 5 15" ItemsSource="{Binding Levels, UpdateSourceTrigger=PropertyChanged,Mode=OneWay}" 
+                                  SelectedItem="{Binding CurrentGroup.Level}" DisplayMemberPath="Name">
+                            <ComboBox.Style>
+                                <Style TargetType="{x:Type ComboBox}">
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding State, UpdateSourceTrigger=PropertyChanged}" Value="1">
+                                            <Setter Property="IsEnabled" Value="True"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ComboBox.Style>
+                        </ComboBox>
+                </StackPanel>
+
+                <StackPanel Grid.Column="2">
+                    <TextBlock Height="25" FontSize="15" HorizontalAlignment="Right" Margin="5 5">Branch</TextBlock>
+                    <TextBlock Height="25" FontSize="15" HorizontalAlignment="Right" Margin="5 5">Note</TextBlock>
+                </StackPanel>
+
+                <StackPanel Grid.Column="3">
+                        <ComboBox FontSize="15" Margin="5 5" ItemsSource="{Binding Branches, UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" 
+                                  SelectedItem="{Binding CurrentGroup.Branch}" DisplayMemberPath="Address">
+                            <ComboBox.Style>
+                                <Style TargetType="{x:Type ComboBox}">
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding State, UpdateSourceTrigger=PropertyChanged}" Value="1">
+                                            <Setter Property="IsEnabled" Value="True"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ComboBox.Style>
+                        </ComboBox>
+                        <TextBox Height="60" FontSize="15" Margin="5 5 5 15"  Text="{Binding CurrentGroup.Note,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}">
+                            <TextBox.Style>
+                                <Style TargetType="{x:Type TextBox}">
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding State, UpdateSourceTrigger=PropertyChanged}" Value="1">
+                                            <Setter Property="IsEnabled" Value="True"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBox.Style>
+                        </TextBox>
+                    </StackPanel>
+
+                <StackPanel Grid.Column="4">
+                        <Button Height="30" Margin="4 4" Command="{Binding Add}" CommandParameter="1">
+                        <Button.BitmapEffect>
+                            <DropShadowBitmapEffect Color="Black" Direction="320" Softness="1" ShadowDepth="10" Opacity="0.5" />
+                        </Button.BitmapEffect>
+                            <Button.Style>
+                                <Style BasedOn="{StaticResource BaseButton}" TargetType="{x:Type Button}">
+                                    <Setter Property="Content" Value="Add"/>
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding State, UpdateSourceTrigger=PropertyChanged}" Value="1">
+                                            <Setter Property="Content" Value="Add"/>
+                                        </DataTrigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding State, UpdateSourceTrigger=PropertyChanged}" Value="1"/>
+                                                <Condition Binding ="{Binding ElementName=MainList, Path=SelectedIndex}" Value="-1"/>
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Content" Value="Save"/>
+                                        </MultiDataTrigger>
+                                        <DataTrigger 
+                                             Binding ="{Binding ElementName=MainList, Path=SelectedIndex}" Value="-1">
+                                            <Setter Property="IsEnabled" Value="True"/>
+                                        </DataTrigger>
+                                        <DataTrigger 
+                                             Binding ="{Binding ElementName=MainList, Path=IsEnabled}" Value="false">
+                                            <Setter Property="IsEnabled" Value="True"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                        <Button Height="30" Margin="4 4" Command="{Binding Edit}" CommandParameter="2">
+                        <Button.BitmapEffect>
+                            <DropShadowBitmapEffect Color="Black" Direction="320" Softness="1" ShadowDepth="10" Opacity="0.5" />
+                        </Button.BitmapEffect>
+                            <Button.Style>
+                                <Style BasedOn="{StaticResource BaseButton}" TargetType="{x:Type Button}">
+                                    <Setter Property="Content" Value="Edit"/>
+                                    <Setter Property="IsEnabled" Value="True"/>
+                                    <Style.Triggers>
+                                        <DataTrigger 
+                                             Binding ="{Binding ElementName=MainList, Path=SelectedIndex}" Value="-1">    
+                                            <Setter Property="IsEnabled" Value="false"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding State, UpdateSourceTrigger=PropertyChanged}" Value="2">
+                                            <Setter Property="IsEnabled" Value="False"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                        <Button Height="30" Margin="4 4" Command="{Binding Reject}" CommandParameter="1">
+                        <Button.BitmapEffect>
+                            <DropShadowBitmapEffect Color="Black" Direction="320" Softness="1" ShadowDepth="10" Opacity="0.5" />
+                        </Button.BitmapEffect>
+                            <Button.Style>
+                                <Style BasedOn="{StaticResource BaseButton}" TargetType="{x:Type Button}">
+                                    <Setter Property="Content" Value="Reject"/>
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding State, UpdateSourceTrigger=PropertyChanged}" Value="1">
+                                            <Setter Property="IsEnabled" Value="True"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding State, UpdateSourceTrigger=PropertyChanged}" Value="2">
+                                            <Setter Property="IsEnabled" Value="True"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                        <Button Height="30" Margin="4 4" Command="{Binding Delete}" CommandParameter="4">
+                            <Button.BitmapEffect>
+                                <DropShadowBitmapEffect Color="Black" Direction="320" Softness="1" ShadowDepth="10" Opacity="0.5" />
+                            </Button.BitmapEffect>
+                            <Button.Style>
+                                <Style BasedOn="{StaticResource BaseButton}" TargetType="{x:Type Button}">
+                                    <Setter Property="Content" Value="Delete"/>
+                                    <Setter Property="IsEnabled" Value="True"/>
+                                    <Style.Triggers>
+                                        <DataTrigger 
+                                             Binding ="{Binding ElementName=MainList, Path=SelectedIndex}" Value="-1">
+                                            <Setter Property="IsEnabled" Value="false"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </StackPanel>
+            </Grid>
+        </StackPanel>
+            <ListView x:Name="MainList" Grid.Row="1" ItemsSource="{Binding MyFilteredItems}" 
+                      SelectedItem="{Binding SelectedGroup,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                      FontWeight="DemiBold"
+                      ScrollViewer.VerticalScrollBarVisibility="Visible" 
+                      ScrollViewer.HorizontalScrollBarVisibility="Visible">
+                <ListView.Style>
+                    <Style TargetType="{x:Type ListView}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding State, UpdateSourceTrigger=PropertyChanged}" Value="1">
+                                <Setter Property="IsEnabled" Value="False"/>
+                                <Setter Property="SelectedIndex" Value="-1"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding State, UpdateSourceTrigger=PropertyChanged}" Value="2">
+                                <Setter Property="IsEnabled" Value="False"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListView.Style>
+                <ListView.View>
+                <GridView >
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=No}" Header="No" Width="Auto"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Name}" Header="Group Name" Width="Auto"/>
+                        <GridViewColumn Header="Service Type" Width="Auto">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Padding="0.5" Text="{Binding ServiceType.Name}" TextAlignment="Center"></TextBlock>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Level" Width="Auto">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Padding="0.5" Text="{Binding Level.Name}" TextAlignment="Center"></TextBlock>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Branch" Width="Auto">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Padding="0.5" Text="{Binding Branch.Address}" TextAlignment="Center"></TextBlock>
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Note}" Header="Note" Width="Auto"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+    </Border>
+</UserControl>
